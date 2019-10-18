@@ -33,15 +33,15 @@ podTemplate(
       def version = getVersionFromPom("pom.xml")
 
       // Set your project Prefix using your GUID
-def prefix        = "b6a7"
+      def prefix        = "b6a7"
 
-// Routes
-def clusterDomain      = "apps.na311.openshift.opentlc.com"
-def tasksDevRoute      = "tasks-${prefix}-tasks-dev.${clusterDomain}"
-def ocpRegistryRoute   = "default-route-openshift-image-registry.${clusterDomain}"
-def nexusRegistryRoute = "nexus-registry-${prefix}-cicd.${clusterDomain}"
-def devProject  = "${prefix}-tasks-dev"
-def prodProject = "${prefix}-tasks-prod"
+      // Routes
+      def clusterDomain      = "apps.na311.openshift.opentlc.com"
+      def tasksDevRoute      = "tasks-${prefix}-tasks-dev.${clusterDomain}"
+      def ocpRegistryRoute   = "default-route-openshift-image-registry.${clusterDomain}"
+      def nexusRegistryRoute = "nexus-registry-${prefix}-cicd.${clusterDomain}"
+      def devProject  = "${prefix}-tasks-dev"
+      def prodProject = "${prefix}-tasks-prod"
       // Set the tag for the development image: version + build number
       def devTag  = "0.0-0"
       // Set the tag for the production image: version
@@ -247,12 +247,11 @@ def prodProject = "${prefix}-tasks-prod"
         }
       }
     }
+    }
   }
-}
 
-// Convenience Functions to read version from the pom.xml
-// Do not change anything below this line.
-// --------------------------------------------------------
+
+}
 def getVersionFromPom(pom) {
   def matcher = readFile(pom) =~ '<version>(.+)</version>'
   matcher ? matcher[0][1] : null
