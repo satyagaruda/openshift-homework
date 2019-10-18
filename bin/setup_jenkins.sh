@@ -32,12 +32,21 @@ items:
     source:
       type: "Git"
       git:
-        uri: "http://gogs.GUID-gogs.svc.cluster.local:3000/CICDLabs/openshift-tasks-private"
+        uri: "https://github.com/babs232/openshift-homework.git"
       contextDir: "contextDir"
     strategy:
       type: "JenkinsPipeline"
       jenkinsPipelineStrategy:
         jenkinsfilePath: Jenkinsfile
+        env:
+          - name: "prefix"
+            value: "gpte-hw"
+          - name: "clusterDomain"
+            value: "apps.na311.openshift.opentlc.com"
+          - name: "devProject"
+            value: "b6a7-tasks-dev"
+          - name: "prodProject"
+            value: "b6a7-tasks-prod"
 kind: List
 metadata: []" | oc create -f - -n ${GUID}-jenkins
 

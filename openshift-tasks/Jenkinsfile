@@ -32,10 +32,20 @@ podTemplate(
       // Extract version from the pom.xml
       def version = getVersionFromPom("pom.xml")
 
-      // TBD Set the tag for the development image: version + build number
-      def devTag  = ""
+      // Set your project Prefix using your GUID
+def prefix        = "b6a7"
+
+// Routes
+def clusterDomain      = "apps.na311.openshift.opentlc.com"
+def tasksDevRoute      = "tasks-${prefix}-tasks-dev.${clusterDomain}"
+def ocpRegistryRoute   = "default-route-openshift-image-registry.${clusterDomain}"
+def nexusRegistryRoute = "nexus-registry-${prefix}-cicd.${clusterDomain}"
+def devProject  = "${prefix}-tasks-dev"
+def prodProject = "${prefix}-tasks-prod"
+      // Set the tag for the development image: version + build number
+      def devTag  = "0.0-0"
       // Set the tag for the production image: version
-      def prodTag = ""
+      def prodTag = "0.0"
 
       // Using Maven build the war file
       // Do not run tests in this step
@@ -45,7 +55,7 @@ podTemplate(
         sh "${mvnCmd} clean package -DskipTests"
       }
 
-      // TBD: The next two stages should run in parallel
+      // The next two stages should run in parallel
 
       // Using Maven run the unit tests
       stage('Unit Tests') {
@@ -64,7 +74,7 @@ podTemplate(
         steps {
         echo "Running Code Analysis"
 
-        sh "${mvnCmd} sonar:sonar -Dsonar.host.url=http://sonarqube-${prefix}-cicd.${clusterDomain}/ -Dsonar.projectName=${JOB_BASE_NAME} -Dsonar.projectVersion=${devTag}"
+        sh "${mvnCmd} sonar:sonar -Dsonar.host.url=http://sonarqube-gpte-hw-cicd.apps.na311.openshift.opentlc.com/ -Dsonar.projectName=${JOB_BASE_NAME} -Dsonar.projectVersion=${devTag}"
  
       }
       }
@@ -74,7 +84,7 @@ podTemplate(
         steps {
         echo "Publish to Nexus"
 
-        sh "${mvnCmd} deploy -DskipTests -DaltDeploymentRepository=nexus::default::http://nexus-${prefix}-cicd.${clusterDomain}/repository/releases"
+        sh "${mvnCmd} deploy -DskipTests -DaltDeploymentRepository=nexus::default::http://nexus3-gpte-hw-cicd.apps.na311.openshift.opentlc.com/repository/releases"
 
        }
       }
@@ -142,7 +152,7 @@ podTemplate(
         steps {
         script{
             echo "Copy image to Nexus Docker Registry"
-            // TBD. Use skopeo to copy
+            //Use skopeo to copy
             sh "skopeo --version"
             sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds=openshift:\$(oc whoami -t) --dest-creds=admin:admin123 docker://${ocpRegistryRoute}/${devProject}/tasks:${devTag} docker://${nexusRegistryRoute}/tasks:${prodTag}"
 
@@ -160,16 +170,17 @@ podTemplate(
       // -------------------------------------
       def destApp   = "tasks-green"
       def activeApp = ""
-
+      def otherDeploymentName     = "tasks-green"
+      def activeServiceName       = ""
       stage('Blue/Green Production Deployment') {
-        // TBD: Determine which application is active
+        //  Determine which application is active
         //      Set Image, Set VERSION
         //      Deploy into the other application
         //      Make sure the application is running and ready before proceeding
         steps {
         echo "Blue/Green Deployment"
 
-        // TBD: 1. Determine which application is active
+        // 1. Determine which application is active
         //      2. Update the image for the other application
         //      3. Deploy into the other application
         //      4. Update Config maps for other application
