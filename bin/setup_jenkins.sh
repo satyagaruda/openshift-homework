@@ -33,14 +33,14 @@ items:
       type: "Git"
       git:
         uri: "https://github.com/babs232/openshift-homework.git"
-      contextDir: "contextDir"
+      contextDir: "openshift-tasks"
     strategy:
       type: "JenkinsPipeline"
       jenkinsPipelineStrategy:
         jenkinsfilePath: Jenkinsfile
         env:
           - name: "prefix"
-            value: "gpte-hw"
+            value: "b6a7"
           - name: "clusterDomain"
             value: "apps.na311.openshift.opentlc.com"
           - name: "devProject"
