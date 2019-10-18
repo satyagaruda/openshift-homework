@@ -17,7 +17,7 @@ oc new-project ${GUID}-jenkins    --display-name="${GUID} AdvDev Homework Jenkin
 oc new-project ${GUID}-tasks-dev  --display-name="${GUID} AdvDev Homework Tasks Development"
 oc new-project ${GUID}-tasks-prod --display-name="${GUID} AdvDev Homework Tasks Production"
 
-if [ "$FROM_JENKINS" = "true" ]; then
+if [ "$FROM_JENKINS" = "false" ]; then
   oc policy add-role-to-user admin ${USER} -n ${GUID}-jenkins
   oc policy add-role-to-user admin ${USER} -n ${GUID}-tasks-dev
   oc policy add-role-to-user admin ${USER} -n ${GUID}-tasks-prod
